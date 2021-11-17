@@ -1,0 +1,7 @@
+volumes:
+  - local: ~/.ops/
+    container: /root/.ops
+    rw: false
+env:
+  - key:
+    value:
