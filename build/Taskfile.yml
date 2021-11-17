@@ -1,0 +1,20 @@
+# A set of tasks to allow ops to be
+version: "3"
+
+# https://raw.githubusercontent.com/nanovms/ops/master/install.sh
+# curl --progress-bar -w '%{http_code}' -L "https://storage.googleapis.com/cli/darwin/ops" -o "/var/folders/gj/pvgrnzjd7qsb7pxcz4rrbk740000gn/T/ops.XXXXXXXXXX.WIKEbVDj"
+
+tasks:
+  run:
+    desc: Run docker container
+    cmds:
+      - cmd: docker rm nanos
+        ignore_error: true
+      - |
+        docker run --platform linux/amd64 --name nanos -v ~/.ops/:/root/.ops nanos:latest /app/ops
+  build:
+    desc: Build docker container
+    cmds:
+      - cmd: docker rmi -f nanos:latest
+        ignore_error: true
+      - docker build --no-cache -t nanos:latest --platform linux/amd64 .
