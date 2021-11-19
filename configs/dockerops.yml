@@ -1,6 +1,9 @@
 volumes:
   - local: ~/.ops/
     container: /root/.ops
+    rw: true
+  - local: ~/.gcp/env/project-123456-a4567x2002h7.json
+    container: /config
     rw: false
 env:
   - key:
