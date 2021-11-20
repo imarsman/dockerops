@@ -31,8 +31,8 @@ Ops runs well on Intel64 macs.
 1) install the [TaskFile runner](https://taskfile.dev/). A few conventions are
    used to ensure that the proper container is called and the tasks consistently
    manage that. I know how to write make files but I find Taskfile to be easy to
-   read and use. On a mac with Homebrew you can install Taskfile with `brew
-   install go-task/tap/go-task`.
+   read and use. On a mac with Homebrew you can install Taskfile with ```brew
+   install go-task/tap/go-task```.
 2) Make sure that you have a running and recent Docker installation that
    supports multiple architectures (for the purposes of this application,
    Intel64).
@@ -49,7 +49,7 @@ Ops runs well on Intel64 macs.
 
 Here is the usage output for the dockerops app
 
-```shell
+```
     % ~/bin/dockerops -h
     Usage: dockerops [--configpath CONFIGPATH] [--env ENV] [--verbose] [CALL [CALL ...]]
 
@@ -66,7 +66,7 @@ Here is the usage output for the dockerops app
 
 Here is a sample invocation
 
-```shell
+```
     % ./dockerops
     Usage:
     ops [command]
@@ -96,7 +96,7 @@ Here is a sample invocation
 
 Here is an invocation to list existing images
 
-```shell
+```
     % ~/bin/dockerops ops image list
     +---------------------+---------------------------------------+---------+--------------+
     |        NAME         |                 PATH                  |  SIZE   |  CREATEDAT   |
