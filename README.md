@@ -21,7 +21,7 @@ things that don't involve building, running, or deploying nanos images.
 The goal of this code is to provide a workflow that is as friction-free as
 possible in terms of building and deploying nanos unikernels. Using the
 dockerops application you can call Ops running in a Docker intel image as if it
-were running on its own
+were running on its own.
 
 This project should work fine on a non-M1 mac but that would be redundant, as
 Ops runs well on Intel macs.
