@@ -9,22 +9,22 @@ scaled down Linux or other Operating system container intended to run at a
 single entry point. A Docker container can have most things installed that would
 normally be installed on any operating system, including additional user
 accounts, logging daemons, etc. Nanos only runs one thing and its purpose is to
-handle calls for an Intel linux architecture so that the single application will
+handle calls for an Intel64 linux architecture so that the single application will
 be able to run. Nanos also provides useful things such as network port and
 filesystem access.
 
 Unless there is something I have missed (as of 20 November, 2021) Ops does not
 run properly on the M1 ARM64 architecture. This is because the implementation of
-nanos used by Ops currently assumes an Intel environment. You can run Ops for
+nanos used by Ops currently assumes an Intel64 environment. You can run Ops for
 things that don't involve building, running, or deploying nanos images.
 
 The goal of this code is to provide a workflow that is as friction-free as
 possible in terms of building and deploying nanos unikernels. Using the
-dockerops application you can call Ops running in a Docker intel image as if it
-were running on its own.
+dockerops application you can call Ops running in a Docker intel64 image as if
+it were running on its own.
 
 This project should work fine on a non-M1 mac but that would be redundant, as
-Ops runs well on Intel macs.
+Ops runs well on Intel64 macs.
 
 ## To run
 
@@ -34,7 +34,8 @@ Ops runs well on Intel macs.
    read and use. On a mac with Homebrew you can install Taskfile with `brew
    install go-task/tap/go-task`.
 2) Make sure that you have a running and recent Docker installation that
-   supports multiple architectures (for the purposes of this application, Intel).
+   supports multiple architectures (for the purposes of this application,
+   Intel64).
 3) Build the container using the task `task build` in the `build` directory.
 4) Compile dockerops in `cmd/dockerops` using `go build .` .
 5) Make sure you have a valid config file (see the sample in the `config`
