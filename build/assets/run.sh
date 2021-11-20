@@ -14,7 +14,5 @@ args="${args#*ops }"
 # Create the call, adding back ops invocation
 to_run="/app/ops $args"
 
-echo $to_run
-
 # Run created call
 eval "$to_run"
