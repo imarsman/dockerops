@@ -108,9 +108,9 @@ func main() {
 	// Add args with naming tied to Taskfile values
 	// dockerArgs = append(dockerArgs, "--name nanos")
 	dockerArgs = append(dockerArgs, "nanos:latest")
-	dockerArgs = append(dockerArgs, "/app/ops")
+	// dockerArgs = append(dockerArgs, "/app/ops")
 	// if strings.TrimSpace(args.Call) != "" {
-	// dockerArgs = append(dockerArgs, args.Call)
+	dockerArgs = append(dockerArgs, args.Call)
 	// }
 
 	// fmt.Println(strings.Join(dockerArgs, ", "))
