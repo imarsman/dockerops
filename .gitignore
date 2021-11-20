@@ -15,3 +15,4 @@
 # vendor/
 build/assets/ops
 cmd/dockerops/dockerops
+cmd/dockerops/dockerops.yml

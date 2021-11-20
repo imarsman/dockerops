@@ -50,8 +50,13 @@ func exists(name string) (exists bool, err error) {
 func main() {
 
 	var args struct {
-		ConfigPath string `arg:"-C" help:"config path - defaults to [dockeropps dir]/dockerops.yml"`
-		Call       string `arg:"-c" help:"call to ops to make"`
+		ConfigPath string `arg:"-c" help:"config path - defaults to [dockeropps dir]/dockerops.yml"`
+		// The rest of the call args as a slice
+		// NOTE:
+		// If there are any flagged parameters to be passed to ops the whole ops
+		// call will need to be surrounded in quotes to ensure that the arg
+		// parser treats them as part of the Call arg.
+		Call []string `arg:"positional" help:"call to ops - surround with quotes"`
 	}
 
 	arg.MustParse(&args)
@@ -64,7 +69,6 @@ func main() {
 
 	if len(args.ConfigPath) == 0 {
 		args.ConfigPath = filepath.Join(exePath, "dockerops.yml")
-		fmt.Println("config path", args.ConfigPath)
 	}
 
 	args.ConfigPath = path.Clean(args.ConfigPath)
@@ -77,7 +81,7 @@ func main() {
 
 	params := Parameters{}
 	cfgBytes, err := os.ReadFile(args.ConfigPath)
-	// fmt.Println("bytes", string(cfgBytes))
+
 	err = yaml.Unmarshal(cfgBytes, &params)
 	if err != nil {
 		fmt.Println("Error reading config file", args.ConfigPath, "exiting")
@@ -100,26 +104,19 @@ func main() {
 	for _, v := range params.Volumes {
 		local, container := strings.TrimSpace(v.Local), strings.TrimSpace(v.Container)
 
-		// fmt.Printf("'%s' '%s'\n", local, container)
 		dockerArgs = append(dockerArgs, "--mount")
 		dockerArgs = append(dockerArgs, fmt.Sprintf("type=bind,source=%s,target=%s", local, container))
 	}
 
 	// Add args with naming tied to Taskfile values
-	// dockerArgs = append(dockerArgs, "--name nanos")
 	dockerArgs = append(dockerArgs, "nanos:latest")
-	// dockerArgs = append(dockerArgs, "/app/ops")
-	// if strings.TrimSpace(args.Call) != "" {
-	dockerArgs = append(dockerArgs, args.Call)
-	// }
 
-	// fmt.Println(strings.Join(dockerArgs, ", "))
+	// Add in call string to be handled by run.sh to invoke ops
+	dockerArgs = append(dockerArgs, strings.Join(args.Call, " "))
 
 	cmd := exec.Command("docker", dockerArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-
-	fmt.Printf("command %s\n", cmd.String())
 
 	err = cmd.Run()
 	if err != nil {
