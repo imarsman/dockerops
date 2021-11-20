@@ -32,9 +32,7 @@ type Env struct {
 	Value string `yaml:"value"`
 }
 
-// var configPath string
-// var arg string
-
+// Check if a file exists
 func exists(name string) (exists bool, err error) {
 	_, err = os.Stat(name)
 	if err == nil {
@@ -48,6 +46,7 @@ func exists(name string) (exists bool, err error) {
 
 func main() {
 
+	// Define args for go-args
 	var args struct {
 		ConfigPath string `arg:"-c" help:"config path - defaults to [dockeropps dir]/dockerops.yml"`
 		// The rest of the call args as a slice
@@ -62,6 +61,8 @@ func main() {
 
 	arg.MustParse(&args)
 
+	// Get path for app for when no config arg supplied and a search is to be
+	// made for the config file.
 	ex, err := os.Executable()
 	if err != nil {
 		panic(err)
@@ -76,24 +77,28 @@ func main() {
 
 	exists, err := exists(args.ConfigPath)
 	if !exists || err != nil {
-		fmt.Println("Could not find config file at", args.ConfigPath, "exiting")
-		os.Exit(1)
+		log.Fatalf("could not find config file at %s - exiting", args.ConfigPath)
 	}
 
+	// Read in config file parameters
 	params := Parameters{}
 	cfgBytes, err := os.ReadFile(args.ConfigPath)
 
 	err = yaml.Unmarshal(cfgBytes, &params)
 	if err != nil {
-		fmt.Println("Error reading config file", args.ConfigPath, "exiting")
-		os.Exit(1)
+		log.Fatalf("error reading config file %s - exiting", args.ConfigPath)
 	}
 
-	dockerArgs := make([]string, 0, len(params.Env)+len(params.Volumes)+5)
+	dockerArgs := make([]string, 0, len(params.Env)+len(params.Volumes)+10)
+
+	// Start building call to docker
 	dockerArgs = append(dockerArgs, "run")
+	// When double-hyphen arguments are handled along with their values it
+	// messes things up.
 	dockerArgs = append(dockerArgs, "--platform")
 	dockerArgs = append(dockerArgs, "linux/amd64")
 
+	// If there are any config environment parameters handle them
 	for _, v := range params.Env {
 		key, val := strings.TrimSpace(v.Key), strings.TrimSpace(v.Value)
 
@@ -101,7 +106,7 @@ func main() {
 			continue
 		}
 		if args.Verbose {
-			fmt.Printf("Setting environment key %s to val %s\n", key, val)
+			log.Printf("setting environment key %s to val %s\n", key, val)
 		}
 		os.Setenv(key, val)
 	}
@@ -117,7 +122,7 @@ func main() {
 					key, val := strings.TrimSpace(kv[0]), strings.TrimSpace(kv[1])
 
 					if args.Verbose {
-						fmt.Printf("- setting arg environment key %s to val %s\n", key, val)
+						log.Printf("setting arg environment key %s to val %s\n", key, val)
 					}
 					os.Setenv(key, val)
 				}
@@ -125,32 +130,35 @@ func main() {
 		}
 	}
 
+	// Handle setting volume mounts to container as defined in config file
 	for _, v := range params.Volumes {
 		local, container := strings.TrimSpace(v.Local), strings.TrimSpace(v.Container)
 
 		if args.Verbose {
-			fmt.Printf("- setting host path %s to container path %s\n", local, container)
+			log.Printf("setting host path %s to container path %s\n", local, container)
 		}
 
 		dockerArgs = append(dockerArgs, "--mount")
 		dockerArgs = append(dockerArgs, fmt.Sprintf("type=bind,source=%s,target=%s", local, container))
 	}
 
-	// Add args with naming tied to Taskfile values
+	// Add args with naming tied to Taskfile value
 	dockerArgs = append(dockerArgs, "nanos:latest")
 
 	// Add in call string to be handled by run.sh to invoke ops
 	dockerArgs = append(dockerArgs, strings.Join(args.Call, " "))
 
+	// Define the call to be made
 	cmd := exec.Command("docker", dockerArgs...)
+	// Allow stdout and stderr to be sent to shell
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	if args.Verbose {
-		fmt.Printf("- running %s\n", cmd.String())
-		fmt.Println()
+		log.Printf("running %s\n\n", cmd.String())
 	}
 
+	// Run the command and report any errors
 	err = cmd.Run()
 	if err != nil {
 		log.Fatalf("cmd.Run() failed with %s\n", err)
