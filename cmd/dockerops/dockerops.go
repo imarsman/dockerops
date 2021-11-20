@@ -24,7 +24,6 @@ type Parameters struct {
 type Volume struct {
 	Local     string `yaml:"local"`
 	Container string `yaml:"container"`
-	Rw        bool   `yaml:"rw"`
 }
 
 // Env a set of environment arguments
@@ -56,7 +55,9 @@ func main() {
 		// If there are any flagged parameters to be passed to ops the whole ops
 		// call will need to be surrounded in quotes to ensure that the arg
 		// parser treats them as part of the Call arg.
-		Call []string `arg:"positional" help:"call to ops - surround with quotes"`
+		Env     []string `arg:"-e,separate" help:"Set environment variable as key=val"`
+		Verbose bool     `arg:"-v" help:"print out what is being handled and done"`
+		Call    []string `arg:"positional" help:"call to ops - surround with quotes"`
 	}
 
 	arg.MustParse(&args)
@@ -99,10 +100,37 @@ func main() {
 		if key == "" || val == "" {
 			continue
 		}
-		dockerArgs = append(dockerArgs, fmt.Sprintf("-e %s=%s", key, val))
+		if args.Verbose {
+			fmt.Printf("Setting environment key %s to val %s\n", key, val)
+		}
+		os.Setenv(key, val)
 	}
+
+	// Handle arg environment pairs
+	if len(args.Env) > 0 {
+		for _, arg := range args.Env {
+			envSet := strings.TrimSpace(arg)
+			parts := strings.Split(envSet, ",")
+			if len(parts) >= 1 {
+				for _, p := range parts {
+					kv := strings.Split(p, "=")
+					key, val := strings.TrimSpace(kv[0]), strings.TrimSpace(kv[1])
+
+					if args.Verbose {
+						fmt.Printf("- setting arg environment key %s to val %s\n", key, val)
+					}
+					os.Setenv(key, val)
+				}
+			}
+		}
+	}
+
 	for _, v := range params.Volumes {
 		local, container := strings.TrimSpace(v.Local), strings.TrimSpace(v.Container)
+
+		if args.Verbose {
+			fmt.Printf("- setting host path %s to container path %s\n", local, container)
+		}
 
 		dockerArgs = append(dockerArgs, "--mount")
 		dockerArgs = append(dockerArgs, fmt.Sprintf("type=bind,source=%s,target=%s", local, container))
@@ -117,6 +145,11 @@ func main() {
 	cmd := exec.Command("docker", dockerArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+
+	if args.Verbose {
+		fmt.Printf("- running %s\n", cmd.String())
+		fmt.Println()
+	}
 
 	err = cmd.Run()
 	if err != nil {
