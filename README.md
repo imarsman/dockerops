@@ -49,7 +49,7 @@ Ops runs well on Intel64 macs.
 
 Here is the usage output for the dockerops app
 
-```
+```shell
     % ~/bin/dockerops -h
     Usage: dockerops [--configpath CONFIGPATH] [--env ENV] [--verbose] [CALL [CALL ...]]
 
@@ -66,7 +66,7 @@ Here is the usage output for the dockerops app
 
 Here is a sample invocation
 
-```
+```shell
     % ./dockerops
     Usage:
     ops [command]
@@ -96,7 +96,7 @@ Here is a sample invocation
 
 Here is an invocation to list existing images
 
-```
+```shell
     % ~/bin/dockerops ops image list
     +---------------------+---------------------------------------+---------+--------------+
     |        NAME         |                 PATH                  |  SIZE   |  CREATEDAT   |
