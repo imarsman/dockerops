@@ -5,11 +5,13 @@
 environment which is used to create a compatible image to run a single
 applicaiton in cloud environments and for use locally using `qemu`. I use it to
 test out unikernels running Go applications. Docker is similar in that it is a
-scaled down Linux or other Operating system container intended to run at a single entry
-point. A Docker container can have most things installed that would normally be
-installed on any operating system, including additional user accounts, logging
-daemons, etc. Nanos only runs one thing and its purpose is to handle calls for
-an Intel linux architecture so that the single application will be able to run.
+scaled down Linux or other Operating system container intended to run at a
+single entry point. A Docker container can have most things installed that would
+normally be installed on any operating system, including additional user
+accounts, logging daemons, etc. Nanos only runs one thing and its purpose is to
+handle calls for an Intel linux architecture so that the single application will
+be able to run. Nanos also provides useful things such as network port and
+filesystem access.
 
 Unless there is something I have missed (as of 20 November, 2021) Ops does not
 run properly on the M1 ARM64 architecture. This is because the implementation of
