@@ -1,5 +1,15 @@
 # Docker Ops
 
+This project is an attempt to enable Nanos unikernels to be managed by Ops on
+non-intel architectures such as the Mac M1 ARM64.
+
+Unless there is something I have missed (as of 20 November, 2021) Ops does not
+run properly on the M1 ARM64 architecture. This is because the implementation of
+nanos used by Ops currently assumes an Intel64 environment. You can run Ops for
+things that don't involve building, running, or deploying nanos images. Putting
+Ops (and therefore Nanos) in an Intel64 container allows Nanos to operate in its
+intended environment.
+
 [Ops](https://ops.city) is a build and deployment tool for the
 [Nanos](https://nanovms.com/) unikernel. A unikernel is a minimal operating
 environment which is used to create a compatible image to run a single
@@ -12,11 +22,6 @@ accounts, logging daemons, etc. Nanos only runs one thing and its purpose is to
 handle calls for an Intel64 linux architecture so that the single application will
 be able to run. Nanos also provides useful things such as network port and
 filesystem access.
-
-Unless there is something I have missed (as of 20 November, 2021) Ops does not
-run properly on the M1 ARM64 architecture. This is because the implementation of
-nanos used by Ops currently assumes an Intel64 environment. You can run Ops for
-things that don't involve building, running, or deploying nanos images.
 
 The goal of this code is to provide a workflow that is as friction-free as
 possible in terms of building and deploying nanos unikernels. Using the
