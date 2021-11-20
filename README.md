@@ -54,6 +54,8 @@ Ops runs well on Intel64 macs.
 6) Run dockerops. See the [Ops site](https://ops.city/) for information on how
    to run Ops and use it to make containers and deploy them to the cloud.
 
+### Sample usage
+
 Here is the usage output for the dockerops app
 
 ```
