@@ -49,7 +49,7 @@ Ops runs well on Intel macs.
 Here is the usage output for the dockerops app
 
 ```
-    % ~/bin/dockerops -h                                                                                         <main ✗>
+    % ~/bin/dockerops -h
     Usage: dockerops [--configpath CONFIGPATH] [--env ENV] [--verbose] [CALL [CALL ...]]
 
     Positional arguments:
@@ -114,4 +114,7 @@ in the container at `/app/ops`. If you put `/app/ops` or `ops` in your call it
 will be cleaned up and the call made will be proper for Ops.
 
 ## Things to do
+- Ensure that things like building and running Ops work
+  - This so far has not been tested. Possible issues include stdout and stderr
+    interaction when doing things like running an image in the container.
 - Use this for development and make any improvements that arise from that
