@@ -1,10 +1,11 @@
 volumes:
-  - local: /Users/ian/.ops/
+  # The location of the installed ops - ops places images under this dir
+  - local: /Users/[user]/.ops/
+    # In the container the ops dir will be /root/.ops
     container: /root/.ops
-    rw: true
-  - local: /Users/ian/.gcp/env/project-123456-a4567x2002h7.json
+  - local: /Users/[user]/.ops/deploy_config
     container: /config
-    rw: false
+# Ops uses environment variables in its operation. This can be handled here.
 env:
   - key:
     value:
