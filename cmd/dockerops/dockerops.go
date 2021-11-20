@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -50,7 +51,7 @@ func main() {
 
 	var args struct {
 		ConfigPath string `arg:"-C" help:"config path - defaults to [dockeropps dir]/dockerops.yml"`
-		Call       string `arg:"positional" help:"call to ops to make"`
+		Call       string `arg:"-c" help:"call to ops to make"`
 	}
 
 	arg.MustParse(&args)
@@ -84,7 +85,9 @@ func main() {
 	}
 
 	dockerArgs := make([]string, 0, len(params.Env)+len(params.Volumes)+5)
-	dockerArgs = append(dockerArgs, "--platform linux/amd64")
+	dockerArgs = append(dockerArgs, "run")
+	dockerArgs = append(dockerArgs, "--platform")
+	dockerArgs = append(dockerArgs, "linux/amd64")
 
 	for _, v := range params.Env {
 		key, val := strings.TrimSpace(v.Key), strings.TrimSpace(v.Value)
@@ -92,24 +95,34 @@ func main() {
 		if key == "" || val == "" {
 			continue
 		}
-		dockerArgs = append(dockerArgs, fmt.Sprintf("--env \"%s=%s\"", key, val))
+		dockerArgs = append(dockerArgs, fmt.Sprintf("-e %s=%s", key, val))
 	}
 	for _, v := range params.Volumes {
 		local, container := strings.TrimSpace(v.Local), strings.TrimSpace(v.Container)
 
-		rw := "ro"
-		if v.Rw {
-			rw = "rw"
-		}
-		dockerArgs = append(dockerArgs, fmt.Sprintf("--volume \"%s:%s:%s\"", local, container, rw))
+		// fmt.Printf("'%s' '%s'\n", local, container)
+		dockerArgs = append(dockerArgs, "--mount")
+		dockerArgs = append(dockerArgs, fmt.Sprintf("type=bind,source=%s,target=%s", local, container))
 	}
-	dockerArgs = append(dockerArgs, "--name nanos")
+
+	// Add args with naming tied to Taskfile values
+	// dockerArgs = append(dockerArgs, "--name nanos")
 	dockerArgs = append(dockerArgs, "nanos:latest")
 	dockerArgs = append(dockerArgs, "/app/ops")
-	dockerArgs = append(dockerArgs, args.Call)
+	// if strings.TrimSpace(args.Call) != "" {
+	// dockerArgs = append(dockerArgs, args.Call)
+	// }
 
-	cmd := exec.Command("docker run", dockerArgs...)
-	fmt.Printf("command \"%s\"\n", cmd.String())
+	// fmt.Println(strings.Join(dockerArgs, ", "))
 
-	// fmt.Print(string(stdout))
+	cmd := exec.Command("docker", dockerArgs...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	fmt.Printf("command %s\n", cmd.String())
+
+	err = cmd.Run()
+	if err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
 }
