@@ -31,8 +31,10 @@ Ops runs well on Intel64 macs.
 1) install the [TaskFile runner](https://taskfile.dev/). A few conventions are
    used to ensure that the proper container is called and the tasks consistently
    manage that. I know how to write make files but I find Taskfile to be easy to
-   read and use. On a mac with Homebrew you can install Taskfile with ```brew
-   install go-task/tap/go-task```.
+   read and use. On a mac with Homebrew you can install Taskfile with 
+   ```
+   brew install go-task/tap/go-task
+   ```
 2) Make sure that you have a running and recent Docker installation that
    supports multiple architectures (for the purposes of this application,
    Intel64).
