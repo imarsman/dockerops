@@ -83,6 +83,9 @@ func main() {
 	// Read in config file parameters
 	params := Parameters{}
 	cfgBytes, err := os.ReadFile(args.ConfigPath)
+	if err != nil {
+		log.Fatalf("error reading config file %s - exiting", args.ConfigPath)
+	}
 
 	err = yaml.Unmarshal(cfgBytes, &params)
 	if err != nil {
