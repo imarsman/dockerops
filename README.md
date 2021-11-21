@@ -59,63 +59,63 @@ Ops runs well on Intel64 macs.
 Here is the usage output for the dockerops app
 
 ```
-    % ~/bin/dockerops -h
-    Usage: dockerops [--configpath CONFIGPATH] [--env ENV] [--verbose] [CALL [CALL ...]]
+% ~/bin/dockerops -h
+Usage: dockerops [--configpath CONFIGPATH] [--env ENV] [--verbose] [CALL [CALL ...]]
 
-    Positional arguments:
-    CALL                   call to ops - surround with quotes
+Positional arguments:
+CALL                   call to ops - surround with quotes
 
-    Options:
-    --configpath CONFIGPATH, -c CONFIGPATH
-                            config path - defaults to [dockeropps dir]/dockerops.yml
-    --env ENV, -e ENV      Set environment variable as key=val
-    --verbose, -v          print out what is being handled and done
-    --help, -h             display this help and exit
+Options:
+--configpath CONFIGPATH, -c CONFIGPATH
+                        config path - defaults to [dockeropps dir]/dockerops.yml
+--env ENV, -e ENV      Set environment variable as key=val
+--verbose, -v          print out what is being handled and done
+--help, -h             display this help and exit
 ```
 
 Here is a sample invocation
 
 ```
-    % ./dockerops
-    Usage:
-    ops [command]
+% ./dockerops
+Usage:
+ops [command]
 
-    Available Commands:
-    build       Build an image from ELF
-    deploy      Build an image from ELF and deploy an instance
-    env         Cross-build environment commands
-    help        Help about any command
-    image       manage nanos images
-    instance    manage nanos instances
-    pkg         Package related commands
-    profile     Profile
-    run         Run ELF binary as unikernel
-    update      check for updates
-    version     Version
-    volume      manage nanos volumes
+Available Commands:
+build       Build an image from ELF
+deploy      Build an image from ELF and deploy an instance
+env         Cross-build environment commands
+help        Help about any command
+image       manage nanos images
+instance    manage nanos instances
+pkg         Package related commands
+profile     Profile
+run         Run ELF binary as unikernel
+update      check for updates
+version     Version
+volume      manage nanos volumes
 
-    Flags:
-    -h, --help            help for ops
-        --show-debug      display debug messages
-        --show-errors     display error messages
-        --show-warnings   display warning messages
+Flags:
+-h, --help            help for ops
+    --show-debug      display debug messages
+    --show-errors     display error messages
+    --show-warnings   display warning messages
 
-    Use "ops [command] --help" for more information about a command.
+Use "ops [command] --help" for more information about a command.
 ```
 
 Here is an invocation to list existing images
 
 ```
-    % ~/bin/dockerops ops image list
-    +---------------------+---------------------------------------+---------+--------------+
-    |        NAME         |                 PATH                  |  SIZE   |  CREATEDAT   |
-    +---------------------+---------------------------------------+---------+--------------+
-    | nanoapplinux.img    | /root/.ops/images/nanoapplinux.img    | 41.8 MB | 1 week ago   |
-    +---------------------+---------------------------------------+---------+--------------+
-    | nats-test-image.img | /root/.ops/images/nats-test-image.img | 44.8 MB | 2 months ago |
-    +---------------------+---------------------------------------+---------+--------------+
-    | natslinux.img       | /root/.ops/images/natslinux.img       | 44.7 MB | 2 months ago |
-    +---------------------+---------------------------------------+---------+--------------+
+% ~/bin/dockerops ops image list
++---------------------+---------------------------------------+---------+--------------+
+|        NAME         |                 PATH                  |  SIZE   |  CREATEDAT   |
++---------------------+---------------------------------------+---------+--------------+
+| nanoapplinux.img    | /root/.ops/images/nanoapplinux.img    | 41.8 MB | 1 week ago   |
++---------------------+---------------------------------------+---------+--------------+
+| nats-test-image.img | /root/.ops/images/nats-test-image.img | 44.8 MB | 2 months ago |
++---------------------+---------------------------------------+---------+--------------+
+| natslinux.img       | /root/.ops/images/natslinux.img       | 44.7 MB | 2 months ago |
++---------------------+---------------------------------------+---------+--------------+
 ```
 
 In the background the script run.sh is invoked in the container. This script
