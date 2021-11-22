@@ -42,7 +42,7 @@ Ops runs well on Intel64 macs.
    ```
 2) Make sure that you have a running and recent Docker installation that
    supports multiple architectures (for the purposes of this application,
-   Intel64). The release from 18 April, 2021 or later should work.
+   Intel64). Any Mac release from 18 April, 2021 or later should.
 3) Build the container using the task `task build` in the `build` directory.
 4) Compile dockerops in `cmd/dockerops` using `go build .` .
 5) Make sure you have a valid config file (see the sample in the `config`
